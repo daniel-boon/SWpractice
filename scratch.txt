@@ -1,0 +1,25 @@
+db.students.insertMany([
+    {first_name: "Steven", last_name: "Smith"},
+    {first_name: "Joan", last_name: "Johnson", gender: "female"}
+])
+
+db.students.insertOne({
+    first_name: "Jack",
+    last_name: "Dawson",
+    memberships: ["mem1", "mem2"],
+    address: {
+        street: "4 main st",
+        city: "Boston"
+    },
+    contacts: [
+        {name:"Brad", relationship: "friend"}
+    ]
+})
+
+db.students.updateOne(
+    {first_n ame: "Joan"},{$set:{first_name: "Joan2", last_name: "Doe", gender: "male"}}
+    )
+
+db.students.updateOne({first_name: "Steven})
+
+db.students.updateOne({first_name:"John"},{$unset:{"age":1}})

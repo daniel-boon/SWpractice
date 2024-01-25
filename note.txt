@@ -1,0 +1,125 @@
+db.students.insertOne({first_name: "John", last_name: "Doe"});
+
+db.students.insertMany([
+{first_name: "Steven", last_name: "Smith"},
+{first_name: "Joan", last_name:"Johnson", gender:"female"}
+])
+
+db.students.insertOne({
+    first_name: "Jack",
+    last_name: "Dawson",
+    memberships: ["mem1", "mem2"],
+    address: {
+        street: "4 main st",
+        city: "Boston"
+    },
+    contacts: [
+        {name: "Brad", relationship: "friend"}
+    ]
+})
+
+#1. update an entire record
+db.students.updateOne({first_name:"John"},{$set:{first_name:"John", last_name:"Doe",gender: "male"}}); 
+db.students.find().pretty();
+
+#2. update only a field in a record 
+db.students.updateOne(
+    {first_name:"Steven"},
+    {$set:
+        {gender:"male"}
+    }); 
+
+db.students.updateOne(
+    {first_name:"Steven"},
+    {$set:{age:45}});
+
+#3. increment a field 
+db.students.updateOne(
+    {first_name:"Steven"},
+    {$inc:{age:5}}
+    );
+
+#4. delete a field 
+db.students.updateOne(
+    {first_name:"Steven"},
+    {$unset:{"age":1}}
+    );
+
+//-----------------------------------
+
+db.students.updateOne(
+    {first_name:"Steven"},
+    {
+        $set:{
+            certificates:[
+                {name: "Web Dev 1"},
+                {name: "Web Dev 2"},
+                {name: "Flutter"},
+            ]
+        }
+    }
+)
+From this
+
+    _id: ObjectId('65ab702e2f095fa34a24e6a4'),
+    first_name: 'Steven',
+    last_name: 'Smith'
+  },
+to this
+{
+    _id: ObjectId('65ab702e2f095fa34a24e6a4'),
+    first_name: 'Steven',
+    last_name: 'Smith',
+    certificates: [
+      { name: 'Web Dev 1' },
+      { name: 'Web Dev 2' },
+      { name: 'Flutter' }
+    ]
+  },
+  
+//-----------------------------------
+
+
+#1. update, fi not found, then insert
+db.students.updateOne({first_name: "Mary"},
+{$set:{first_name:"Mary", last_name:"Samson"} },{upsert:true});
+
+#2. rename a field 
+db.students.updateOne(
+    {first_name:"Steven"},
+    {$rename:{"gender":"sex"}});
+
+#3. remove AL records with Mary as first name 
+db.students.deleteMany({first_name:"Mary"});
+
+#4. remove FIRST record with Mary as first name 
+db.students.deleteOne({first_name:"Mary"});
+
+
+db.students.update({first_name:"Steven"},{$set:{age:45}}); 
+db.students.find({age:{$lt:50}});
+
+#1. create Index field 
+db.students.createIndex({first_name:'text'});
+#2. search a text in the Index field 
+db.students.find({
+$text:{
+    $search:"John"
+    } 
+});
+
+#1. show with sorting (1 : ascending, 1- : descending) 
+db.students.find().sort({last_name:1});
+
+#2. count the records
+db.students.find().count()
+db.students.find({gender: "male"}).count()
+
+#3. show only the first 4 items 
+db.students.find().limit(4);
+db.students.find().limit(4).sort({last_name:1});
+
+#4. show only a selected field of all records
+db.students.find().forEach(function(doc){
+    print(" Student Name: "+doc.first_name
+    )});
